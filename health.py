@@ -68,5 +68,8 @@ while(1):
                              params=send_body)
         except:
             logging.error("key error!")
-        old_data[key] = new_data[key]
+        try:
+            old_data[key] = new_data[key]
+        except:
+            old_data = get_doctors()
     time.sleep(5)
