@@ -7,10 +7,10 @@ new_data = {}
 old_data = {}
 
 def signed(i):
-	if (i>0):
-		return "+"+str(i)
-	else:
-		return i
+    if (i>0):
+        return "+"+str(i)
+    else:
+        return i
 
 def get_doctors():
     doctors = {}
@@ -50,20 +50,23 @@ while(1):
     new_data = get_doctors()
     send_body = {'text': '', 'chat_id':'@p75talony'}
     for key in new_data:
-        if   (old_data[key] == "НЕТ" and new_data[key] != "НЕТ"):
-            logging.debug("Появились талоны к врачу ",key)
-            send_body['text'] = 'Появились талоны к врачу!\n {} {} шт.'.format(key, new_data[key])
-            requests.get("https://api.telegram.org/bot287489756:AAHUDL_e_MRtkgKyK5IMyJFtYPTPzzbJ3tI/sendMessage",
-                         params=send_body)
-        elif (old_data[key] != "НЕТ" and new_data[key] == "НЕТ"):
-            logging.debug("Исчезли талоны к врачу ",key)
-            send_body['text'] = '{} - талоны закончились :('.format(key)
-            requests.get("https://api.telegram.org/bot287489756:AAHUDL_e_MRtkgKyK5IMyJFtYPTPzzbJ3tI/sendMessage",
-                         params=send_body)
-        elif (old_data[key] != new_data[key]):
-            logging.debug("Изменились талоны к врачу ",key)
-            send_body['text'] = '{}, \nосталось{} ({})'.format(key, new_data[key], signed(int(new_data[key])-int(old_data[key])) )
-            requests.get("https://api.telegram.org/bot287489756:AAHUDL_e_MRtkgKyK5IMyJFtYPTPzzbJ3tI/sendMessage",
-                         params=send_body)
+        try:
+            if   (old_data[key] == "НЕТ" and new_data[key] != "НЕТ"):
+                logging.debug("Появились талоны к врачу ",key)
+                send_body['text'] = 'Появились талоны к врачу!\n {} {} шт.'.format(key, new_data[key])
+                requests.get("https://api.telegram.org/bot287489756:AAHUDL_e_MRtkgKyK5IMyJFtYPTPzzbJ3tI/sendMessage",
+                             params=send_body)
+            elif (old_data[key] != "НЕТ" and new_data[key] == "НЕТ"):
+                logging.debug("Исчезли талоны к врачу ",key)
+                send_body['text'] = '{} - талоны закончились :('.format(key)
+                requests.get("https://api.telegram.org/bot287489756:AAHUDL_e_MRtkgKyK5IMyJFtYPTPzzbJ3tI/sendMessage",
+                             params=send_body)
+            elif (old_data[key] != new_data[key]):
+                logging.debug("Изменились талоны к врачу ",key)
+                send_body['text'] = '{}, \nосталось{} ({})'.format(key, new_data[key], signed(int(new_data[key])-int(old_data[key])) )
+                requests.get("https://api.telegram.org/bot287489756:AAHUDL_e_MRtkgKyK5IMyJFtYPTPzzbJ3tI/sendMessage",
+                             params=send_body)
+        except:
+            logging.error("key error!")
         old_data[key] = new_data[key]
     time.sleep(5)
