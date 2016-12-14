@@ -63,7 +63,7 @@ while(1):
                              params=send_body)
             elif (old_data[key] != new_data[key]):
                 logging.debug("Изменились талоны к врачу ",key)
-                send_body['text'] = '{}, \nосталось{} ({})'.format(key, new_data[key], signed(int(new_data[key])-int(old_data[key])) )
+                send_body['text'] = '{}, \nосталось {} ({})'.format(key, new_data[key], signed(int(new_data[key])-int(old_data[key])) )
                 requests.get("https://api.telegram.org/bot287489756:AAHUDL_e_MRtkgKyK5IMyJFtYPTPzzbJ3tI/sendMessage",
                              params=send_body)
         except:
