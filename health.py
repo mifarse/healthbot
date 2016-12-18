@@ -39,8 +39,7 @@ def get_doctors():
             doctors["Терапевт: "+raw[0]] = raw[-1]
         except:
             logging.error("Ошибка! Не удалось обработать терапевта.")
-    
-    #print(doctors)
+
     logging.debug(doctors)
     return doctors
 
@@ -61,11 +60,11 @@ while(1):
                 send_body['text'] = '{} - талоны закончились :('.format(key)
                 requests.get("https://api.telegram.org/bot287489756:AAHUDL_e_MRtkgKyK5IMyJFtYPTPzzbJ3tI/sendMessage",
                              params=send_body)
-            elif (old_data[key] != new_data[key]):
-                logging.debug("Изменились талоны к врачу ",key)
-                send_body['text'] = '{}, \nосталось {} ({})'.format(key, new_data[key], signed(int(new_data[key])-int(old_data[key])) )
-                requests.get("https://api.telegram.org/bot287489756:AAHUDL_e_MRtkgKyK5IMyJFtYPTPzzbJ3tI/sendMessage",
-                             params=send_body)
+            # elif (old_data[key] != new_data[key]):
+            #     logging.debug("Изменились талоны к врачу ",key)
+            #     send_body['text'] = '{}, \nосталось {} ({})'.format(key, new_data[key], signed(int(new_data[key])-int(old_data[key])) )
+            #     requests.get("https://api.telegram.org/bot287489756:AAHUDL_e_MRtkgKyK5IMyJFtYPTPzzbJ3tI/sendMessage",
+            #                  params=send_body)
         except:
             logging.error("key error!")
         try:
