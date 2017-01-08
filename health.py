@@ -16,7 +16,7 @@ def get_doctors():
     doctors = {}
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36 OPR/40.0.2308.90'}
     data = {'COMMAND': 1}
-    r = requests.post("http://p75.spb.ru/cgi-bin/tcgi1.exe", headers=headers, data=data)
+    r = requests.post("http://p75.spb.ru/cgi-bin/tcgi1.exe", timeout=3, headers=headers, data=data)
     soup = BeautifulSoup(r.text.encode('latin1').decode('cp1251'), 'html.parser')
 
     for k in soup.find_all('button')[4:]:
@@ -31,7 +31,7 @@ def get_doctors():
     data['COMMAND'] = 10
     data['DIALOGSPECCOMMAND'] = 2
     data['CODESPEC'] = 3
-    r = requests.post("http://p75.spb.ru/cgi-bin/tcgi1.exe", headers=headers, data=data)
+    r = requests.post("http://p75.spb.ru/cgi-bin/tcgi1.exe", timeout=3, headers=headers, data=data)
     soup = BeautifulSoup(r.text.encode('latin1').decode('cp1251'), 'html.parser')
     for k in soup.find_all('button')[4:-1]: # Три лишних кнопки, без кнопки "любой доктор"
         try:
