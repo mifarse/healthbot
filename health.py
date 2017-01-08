@@ -1,4 +1,4 @@
-import requests, time, logging
+import requests, time, logging, pickle
 from bs4 import BeautifulSoup
 
 logging.basicConfig(format = u'[%(asctime)s] %(levelname)-8s %(message)s', level = logging.DEBUG)
@@ -16,7 +16,7 @@ def get_doctors():
     doctors = {}
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36 OPR/40.0.2308.90'}
     data = {'COMMAND': 1}
-    r = requests.post("http://p75.spb.ru/cgi-bin/tcgi1.exe", timeout=3, headers=headers, data=data)
+    r = requests.post("http://p75.spb.ru/cgi-bin/tcgi1.exe", timeout=4, headers=headers, data=data)
     soup = BeautifulSoup(r.text.encode('latin1').decode('cp1251'), 'html.parser')
 
     for k in soup.find_all('button')[4:]:
@@ -31,7 +31,7 @@ def get_doctors():
     data['COMMAND'] = 10
     data['DIALOGSPECCOMMAND'] = 2
     data['CODESPEC'] = 3
-    r = requests.post("http://p75.spb.ru/cgi-bin/tcgi1.exe", timeout=3, headers=headers, data=data)
+    r = requests.post("http://p75.spb.ru/cgi-bin/tcgi1.exe", timeout=4, headers=headers, data=data)
     soup = BeautifulSoup(r.text.encode('latin1').decode('cp1251'), 'html.parser')
     for k in soup.find_all('button')[4:-1]: # Три лишних кнопки, без кнопки "любой доктор"
         try:
@@ -43,7 +43,14 @@ def get_doctors():
     logging.debug(doctors)
     return doctors
 
-old_data = get_doctors()
+try:
+    with open('data.pickle', 'rb') as f:
+        old_data = pickle.load(f)
+    logging.info("Loading from binary file")
+except:
+    logging.warning("Loading from the internet")
+    old_data = get_doctors()
+
 print("Listener has been started.")
 while(1):
     new_data = get_doctors()
@@ -71,4 +78,9 @@ while(1):
             old_data[key] = new_data[key]
         except:
             old_data = get_doctors()
+    with open('data.pickle', 'wb') as f:
+        logging.info("Opened file for saving")
+        pickle.dump(new_data, f)
+        logging.info("Binary data saved.")
+
     time.sleep(5)
