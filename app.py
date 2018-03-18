@@ -1,9 +1,10 @@
-import requests, time, logging, threading, json
+import requests, time, threading, json
+#import logging
 from bs4 import BeautifulSoup
 from bottle import route, run, template
 
 
-logging.basicConfig(format = u'[%(asctime)s] %(levelname)-8s %(message)s', level = logging.DEBUG)
+#logging.basicConfig(format = u'[%(asctime)s] %(levelname)-8s %(message)s', level = logging.DEBUG)
 
 ############### SERVER ###########
 @route('/')
@@ -36,7 +37,7 @@ def get_doctors():
             if (raw[0] != "ТЕРАПЕВТ"):
                 doctors[raw[0]] = raw[-1]
         except:
-            logging.error("Ошибка! Не удалось обработать врача.")
+            #logging.error("Ошибка! Не удалось обработать врача.")
 
     #Смотрим конкретных докторов терапевтов.
     data['COMMAND'] = 10
@@ -49,9 +50,9 @@ def get_doctors():
             raw = k.span.string.split()
             doctors["Терапевт: "+raw[0]] = raw[-1]
         except:
-            logging.error("Ошибка! Не удалось обработать терапевта.")
+            #logging.error("Ошибка! Не удалось обработать терапевта.")
 
-    logging.debug(doctors)
+    #logging.debug(doctors)
     return doctors
 
 
@@ -61,7 +62,7 @@ if __name__ == "__main__":
 
     old_data = requests.get("https://api.myjson.com/bins/nem6b").json()
 
-    logging.debug(old_data)
+    #logging.debug(old_data)
 
     print("Listener has been started.")
     while(1):
@@ -70,22 +71,22 @@ if __name__ == "__main__":
         for key in new_data:
             try:
                 if   (old_data[key] == "НЕТ" and new_data[key] != "НЕТ"):
-                    logging.debug("Появились талоны к врачу ",key)
+                    #logging.debug("Появились талоны к врачу ",key)
                     send_body['text'] = 'Появились талоны к врачу!\n {} {} шт.'.format(key, new_data[key])
                     requests.get("https://api.telegram.org/bot{}/sendMessage".format(bot_token),
                                  params=send_body)
                 elif (old_data[key] != "НЕТ" and new_data[key] == "НЕТ"):
-                    logging.debug("Исчезли талоны к врачу ",key)
+                    #logging.debug("Исчезли талоны к врачу ",key)
                     send_body['text'] = '{} - талоны закончились :('.format(key)
                     requests.get("https://api.telegram.org/bot{}/sendMessage".format(bot_token),
                                  params=send_body)
                 elif (old_data[key] != new_data[key]):
-                    logging.debug("Изменились талоны к врачу ",key)
+                    #logging.debug("Изменились талоны к врачу ",key)
                     send_body['text'] = '{}, \nосталось {} ({})'.format(key, new_data[key], signed(int(new_data[key])-int(old_data[key])) )
                     requests.get("https://api.telegram.org/bot{}/sendMessage".format(bot_token),
                                  params=send_body)
             except:
-                logging.error("key error!")
+                #logging.error("key error!")
             try:
                 old_data[key] = new_data[key]
             except:

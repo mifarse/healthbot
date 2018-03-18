@@ -1,3 +1,2 @@
 bottle
-logging
 requests
