@@ -2,6 +2,7 @@ import requests, time, threading, json
 #import logging
 from bs4 import BeautifulSoup
 from bottle import route, run, template
+import sys
 
 
 #logging.basicConfig(format = u'[%(asctime)s] %(levelname)-8s %(message)s', level = logging.DEBUG)
@@ -60,7 +61,7 @@ def get_doctors():
 
 if __name__ == "__main__":
 
-    threading.Thread(target=run, kwargs=dict(host='0.0.0.0', port=argv[1])).start()
+    threading.Thread(target=run, kwargs=dict(host='0.0.0.0', port=sys.argv[1])).start()
 
     old_data = requests.get("https://api.myjson.com/bins/nem6b").json()
 
