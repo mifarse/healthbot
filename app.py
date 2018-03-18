@@ -51,6 +51,7 @@ def get_doctors():
             raw = k.span.string.split()
             doctors["Терапевт: "+raw[0]] = raw[-1]
         except:
+            pass
             #logging.error("Ошибка! Не удалось обработать терапевта.")
 
     #logging.debug(doctors)
@@ -87,7 +88,7 @@ if __name__ == "__main__":
                     requests.get("https://api.telegram.org/bot{}/sendMessage".format(bot_token),
                                  params=send_body)
             except:
-                #logging.error("key error!")
+                pass#logging.error("key error!")
             try:
                 old_data[key] = new_data[key]
             except:
