@@ -1,8 +1,8 @@
-import requests, time, threading, json
+import requests, time, threading, json, sys
 #import logging
 from bs4 import BeautifulSoup
 from bottle import route, run, template
-import sys
+from datetime import datetime
 
 
 #logging.basicConfig(format = u'[%(asctime)s] %(levelname)-8s %(message)s', level = logging.DEBUG)
@@ -59,6 +59,12 @@ def get_doctors():
     #logging.debug(doctors)
     return doctors
 
+def serialize_page(d):
+    content = [{"tag":"i","children":["последнее обновление в "+datetime.now().strftime('%H:%M %d.%m.%Y')]}]
+    content.append({"tag": "hr"})
+    for key in d:
+        content.append({"tag": "p", "children": [key+": "+d[key]]})
+    return json.dumps(content)
 
 if __name__ == "__main__":
 
@@ -103,7 +109,7 @@ if __name__ == "__main__":
         telegraph_data = {'access_token': telegraph_token, \
         'title': 'Быстрая сводка', \
         'author_name': '@p75spbru', \
-        'content': "[{\"tag\":\"p\",\"children\":[\""+x+"\"]}]" \
+        'content': serialize_page(new_data) \
         }
 
         r = requests.get("https://api.telegra.ph/editPage/Bystraya-svodka-03-19", params=telegraph_data)
