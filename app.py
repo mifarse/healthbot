@@ -73,19 +73,19 @@ if __name__ == "__main__":
         send_body = {'text': '', 'chat_id':'-1001093298291'}
         for key in new_data:
             try:
-                if   (old_data[key] == "НЕТ" and new_data[key] != "НЕТ"):
-                    #logging.debug("Появились талоны к врачу ",key)
-                    send_body['text'] = 'Появились талоны к врачу!\n {} {} шт.'.format(key, new_data[key])
+                if   (old_data[key] == "НЕТ" and new_data[key] != "НЕТ") or (not hasattr(old_data, key) and hasattr(new_data, key)):
+                    print("Появились талоны к врачу")
+                    send_body['text'] = '🆕 Появились талоны к врачу!\n{} {} шт.'.format(key, new_data[key])
                     requests.get("https://api.telegram.org/bot{}/sendMessage".format(bot_token),
                                  params=send_body)
                 elif (old_data[key] != "НЕТ" and new_data[key] == "НЕТ"):
-                    #logging.debug("Исчезли талоны к врачу ",key)
-                    send_body['text'] = '{} - талоны закончились :('.format(key)
+                    print("Исчезли талоны к врачу ",key)
+                    send_body['text'] = '{} - талоны закончились 😔'.format(key)
                     requests.get("https://api.telegram.org/bot{}/sendMessage".format(bot_token),
                                  params=send_body)
-                elif (old_data[key] != new_data[key]):
-                    #logging.debug("Изменились талоны к врачу ",key)
-                    send_body['text'] = '{}, \nосталось {} ({})'.format(key, new_data[key], signed(int(new_data[key])-int(old_data[key])) )
+                elif (int(old_data[key]) < int(new_data[key])):
+                    print("Изменились талоны к врачу ",key)
+                    send_body['text'] = '{}, \nдоступно ещё {} талона'.format(key, signed(int(new_data[key])-int(old_data[key])) )
                     requests.get("https://api.telegram.org/bot{}/sendMessage".format(bot_token),
                                  params=send_body)
             except:
