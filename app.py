@@ -107,5 +107,6 @@ if __name__ == "__main__":
         }
 
         r = requests.get("https://api.telegra.ph/editPage/Bystraya-svodka-03-19", params=telegraph_data)
+        print(r.text)
 
         time.sleep(60)
