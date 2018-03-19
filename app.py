@@ -16,6 +16,7 @@ def index():
 new_data = {}
 old_data = {}
 bot_token = "287489756:AAF9zKnbWxhEIeELVeCQcgJlwAhW2aIeReM"
+telegraph_token = "d644cfbeda45f73c80b2503287d5bea27880a343de7a7c2abc8349efa9bd"
 
 
 def signed(i):
@@ -98,5 +99,13 @@ if __name__ == "__main__":
         x = json.dumps(new_data)
         r = requests.put("https://api.myjson.com/bins/nem6b", data=x, headers={'content-type':'application/json'})
         print(r.status_code)
+
+        telegraph_data = {'access_token': telegraph_token, \
+        'title': 'Быстрая сводка', \
+        'author_name': '@p75spbru', \
+        'content': "[{\"tag\":\"p\",\"children\":[\""+x+"\"]}]" \
+        }
+
+        r = requests.get("https://api.telegra.ph/editPage/Bystraya-svodka-03-19", params=telegraph_data)
 
         time.sleep(60)
