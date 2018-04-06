@@ -26,11 +26,18 @@ def signed(i):
         return i
 
 
+def strike(text):
+    result = ''
+    for c in text:
+        result = result + c + '\u0336'
+    return result
+
+
 def get_doctors():
     doctors = {}
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36 OPR/40.0.2308.90'}
     data = {'COMMAND': 1}
-    r = requests.post("http://89.163.32.10/cgi-bin/tcgi1.exe", timeout=4, headers=headers, data=data)
+    r = requests.post("http://89.163.32.10/cgi-bin/tcgi1.exe", timeout=6, headers=headers, data=data)
     soup = BeautifulSoup(r.text.encode('latin1').decode('cp1251'), 'html.parser')
 
     for k in soup.find_all('button')[4:]:
@@ -46,7 +53,7 @@ def get_doctors():
     data['COMMAND'] = 10
     data['DIALOGSPECCOMMAND'] = 2
     data['CODESPEC'] = 3
-    r = requests.post("http://89.163.32.10/cgi-bin/tcgi1.exe", timeout=4, headers=headers, data=data)
+    r = requests.post("http://89.163.32.10/cgi-bin/tcgi1.exe", timeout=6, headers=headers, data=data)
     soup = BeautifulSoup(r.text.encode('latin1').decode('cp1251'), 'html.parser')
     for k in soup.find_all('button')[4:-1]: # Три лишних кнопки, без кнопки "любой доктор"
         try:
@@ -92,7 +99,7 @@ if __name__ == "__main__":
                                  params=send_body)
                 elif (int(old_data[key]) < int(new_data[key])):
                     print("Изменились талоны к врачу ",key)
-                    send_body['text'] = '{}, \nдоступно ещё {} талона'.format(key, signed(int(new_data[key])-int(old_data[key])) )
+                    send_body['text'] = '{}, \n{}➡️{} ({})'.format(key, strike(old_data[key]), new_data[key], signed(int(new_data[key])-int(old_data[key])) )
                     requests.get("https://api.telegram.org/bot{}/sendMessage".format(bot_token),
                                  params=send_body)
             except:
