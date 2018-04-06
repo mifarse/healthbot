@@ -99,7 +99,7 @@ if __name__ == "__main__":
                                  params=send_body)
                 elif (int(old_data[key]) < int(new_data[key])):
                     print("Изменились талоны к врачу ",key)
-                    send_body['text'] = '{}, \n{}➡️{} ({})'.format(key, strike(old_data[key]), new_data[key], signed(int(new_data[key])-int(old_data[key])) )
+                    send_body['text'] = '{}, \n{} ➡️ {} ({})'.format(key, strike(old_data[key]), new_data[key], signed(int(new_data[key])-int(old_data[key])) )
                     requests.get("https://api.telegram.org/bot{}/sendMessage".format(bot_token),
                                  params=send_body)
             except:
