@@ -43,7 +43,7 @@ def get_doctors():
     for k in soup.find_all('button')[4:]:
         try:
             raw = k.span.string.split()
-            if (raw[0] != "ТЕРАПЕВТ"):
+            if (raw[0] != "ТЕРАПЕВТ" or raw[0] != "АКУШЕР-ГИНЕКОЛ."):
                 doctors[raw[0]] = raw[-1]
         except:
             pass
@@ -62,6 +62,21 @@ def get_doctors():
         except:
             pass
             #logging.error("Ошибка! Не удалось обработать терапевта.")
+
+    #Смотрим конкретных гинекологов.
+    data['COMMAND'] = 10
+    data['DIALOGSPECCOMMAND'] = 2
+    data['CODESPEC'] = 35
+    r = requests.post("http://89.163.32.10/cgi-bin/tcgi1.exe", timeout=6, headers=headers, data=data)
+    soup = BeautifulSoup(r.text.encode('latin1').decode('cp1251'), 'html.parser')
+    for k in soup.find_all('button')[4:-1]: # Три лишних кнопки, без кнопки "любой доктор"
+        try:
+            raw = k.span.string.split()
+            doctors["Гинеколог: "+raw[0]] = raw[-1]
+        except:
+            pass
+            #logging.error("Ошибка! Не удалось обработать терапевта.")
+
 
     #logging.debug(doctors)
     return doctors
