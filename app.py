@@ -43,7 +43,7 @@ def get_doctors():
     for k in soup.find_all('button')[4:]:
         try:
             raw = k.span.string.split()
-            if (raw[0] != "ТЕРАПЕВТ" or raw[0] != "АКУШЕР-ГИНЕКОЛ."):
+            if not ("ТЕРАПЕВТ" in raw[0] or "АКУШЕР-ГИНЕКОЛ." in raw[0]):
                 doctors[raw[0]] = raw[-1]
         except:
             pass
@@ -77,8 +77,6 @@ def get_doctors():
             pass
             #logging.error("Ошибка! Не удалось обработать терапевта.")
 
-
-    #logging.debug(doctors)
     return doctors
 
 def serialize_page(d):
